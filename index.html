@@ -1,0 +1,3506 @@
+<!--This is an archived project that I created in 2015 for the World Wide Views event on Climate and Energy.
+Though I mostly wrote the code for this project, there may be bits here and there that I copied from StackOverflow.
+Enjoy!
+
+By Andrea Minano Goldring-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="UTF-8">
+	<link rel="shortcut icon" href="img/icon.ico" />
+    <title>World Wide Views on Climate and Energy: Mapping the Results</title>
+    <!--<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js"></script>-->
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="src/leaflet.pattern-src.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+	<script>
+	var valueSelected = "1.1";
+	var geojson;
+	var info;
+	$(document).ready(function(){
+	$('select').on('change', function (e) {
+		var optionSelected = $("option:selected", this);
+		valueSelected = this.value;
+		geojson.setStyle(style);
+		info.update();
+		get_legend_items();
+		
+	});
+	});
+	
+	function get_legend_items(){
+
+	//Responses Session 1
+	var grades_f_1_1 = ["a", "b", "c", "d"];
+	var grades_f_1_2 = ["a", "b", "c", "d"];
+	var grades_f_1_3 = ["a", "b", "c", "d", "e"];
+	var grades_f_1_4 = ["a", "b", "c"];
+	var grades_f_1_5 = ["a", "b", "c", "d"];
+	var grades_f_1_6 = ["a", "b", "c", "d", "e", "f"];
+	
+	var responses_f_1_1 = ["Very concerned", "Moderately concerned", "Not concerned", "Don't know/Do not wish to answer"];
+	var responses_f_1_2 = ["Are mostly a threat to our quality of life", "Are mostly an opportunity to improve our quality of life", "Will not impact our quality of life", "Don't know/Do not wish to answer"];
+	var responses_f_1_3 = ["The focus should be primarily on adaptation", "The focus should be primarily on mitigation", "The focus should equally be on adaptation and mitigation", "Focus should be neither on adaptation nor mitigation", "Don't know/Do not wish to answer"];
+	var responses_f_1_4 = ["Yes", "No", "Don't know/Do not wish to answer"];
+	var responses_f_1_5 = ["The world should decide in Paris to do whatever it takes to limit temperatures exceeding 2 degrees Celsius warming", "The world should take ambitious action, but not whatever it takes", "The world should opt for a goal that will not substantially change the present scheme of things", "Don't know/Do not wish to answer"];
+	var responses_f_1_6 = ["It is primarily a global responsibility (Through an international climate agreement or treaty)", "It is primarily the responsibility of citizens and civil society initiatives", "It is primarily the responsibility of national governments", "It is primarily the responsibility of local authorities", "It is primarily the responsibility of businesses and the private sector", "Don't know/Do not wish to answer"];
+	
+	//Responses Session 2
+	var grades_f_2_1 = ["a", "b", "c", "d", "e"];
+	var grades_f_2_2 = ["a", "b", "c", "d", "e", "f", "g", "h"];
+	var grades_f_2_3 = ["a", "b", "c", "d"];
+	var grades_f_2_4 = ["a", "b", "c", "d", "e", "f", "g"];
+	var grades_f_2_5 = ["a", "b", "c", "d"];
+	
+	var responses_f_2_1 = ["Yes, for all countries", "Yes, for all countries but gradually increasing costs in countries that do not reduce their emissions", "Yes, graduated according to the level of development", "No I would not support such a tax", "Don't know/Do not wish to answer"];
+	var responses_f_2_2 = ["Support for research and development of low carbon technology, for example research into effective car batteries", "Carbon pricing, for example through taxes on carbon emissions, or emissions trading schemes", "Cutting fossil fuel subsidies", "Subsidisation for low-carbon energy, such as wind, solar power, marine energies, geothermal energy", "Legislation of new standards, for example to improve the energy efficiency of cars or buildings and appliances", "New socio-economic institutions and practices, such as investment in public transportation systems or consumption of locally produced food", "No large-scale cuts should be made", "Don't know/Do not wish to answer"];
+	var responses_f_2_3 = ["Solutions implemented globally", "Solutions implemented at national level", "Solutions implemented at local/subnational level", "Don't know/Do not wish to answer"];
+	var responses_f_2_4 = ["Education programs on climate change for the broader public", "Use of solutions developed by traditional and indigenous knowledge", "Initiatives for fostering more gender equality", "Other UN initiatives, conventions and programs", "Protection of tropical forests", "None of these instruments are relevant", "Don't know/Do not wish to answer"];
+	var responses_f_2_5 = ["Stop exploration for all fossil fuel reserves", "Stop only the exploration for coal", "The world should continue to explore", "Don't know/Do not wish to answer"];
+	
+	//Responses Session 3
+	var grades_f_3_1 = ["a", "b", "c", "d", "e", "f"];
+	var grades_f_3_2 = ["a", "b", "c", "d", "e", "f"];
+	var grades_f_3_3 = ["a", "b", "c", "d", "e"];
+	var grades_f_3_4 = ["a", "b", "c", "d"];
+	var grades_f_3_5 = ["a", "b", "c", "d", "e"];
+	
+	var responses_f_3_1 = ["I knew almost nothing", "I knew very little", "I knew some", "I knew a lot", "I was already an expert on the subject", "Don't know/Do not wish to answer"];
+	var responses_f_3_2 = ["I know almost nothing", "I know very little", "I know some", "I know a lot", "I am an expert on the subject", "Don't know/Do not wish to answer"];
+	var responses_f_3_3 = ["Climate change is national priority and it should be", "Climate change is a national priority and it should not be", "Climate change is not a national priority but it should be", "Climate change is not a national priority and it should not be", "Don't know/Do not wish to answer"];
+	var responses_f_3_4 = ["Yes, even if many other countries do not take measures", "Yes, but only if many other countries take measures", "No, we should not intervene in this matter", "Don't know/Do not wish to answer"];
+	var responses_f_3_5 = ["Yes, and it should be legally binding for all countries", "Yes, but it should only be legally binding for developed and emerging nations", "Yes, but it should be voluntary for all nations", "No", "Don't know/Do not wish to answer"];
+	
+	//Responses Session 4
+	var grades_f_4_1 = ["a", "b", "c", "d", "e"];
+	var grades_f_4_2 = ["a", "b", "c"];
+	var grades_f_4_3 = ["a", "b", "c", "d"];
+	var grades_f_4_4 = ["a", "b", "c", "d"];
+	var grades_f_4_5 = ["a", "b", "c"];
+	var grades_f_4_6 = ["a", "b", "c", "d"];
+	var grades_f_4_7 = ["a", "b", "c"];
+	var grades_f_4_8 = ["a", "b", "c", "d", "e", "f", "g"];
+	
+	
+	var responses_f_4_1 = ["Historical emissions", "Current or anticipated emissions", "Current or future economic capabilities", "Countries should not have to make national contributions", "Don't know/Do not wish to answer"];
+	var responses_f_4_2 = ["Yes", "No", "Don't know/Do not wish to answer"];
+	var responses_f_4_3 = ["Yes, about half or more", "Yes, but only a small part", "No", "Don't know/Do not wish to answer"];
+	var responses_f_4_4 = ["All developing countries should be treated the same", "Richer developing countries should have the same responsibilities as developed nations", "Richer developing countries should be treated as a third group, with bigger responsibilities than the poorest, least developed countries, but smaller responsibilities than developed nations", "Don't know/Do not wish to answer"];
+	var responses_f_4_5 = ["Yes", "No, richer developed countries should also contribute", "Don't know/Do not wish to answer"];
+	var responses_f_4_6 = ["Yes, completely", "Yes, partly", "No", "Don't know/Do not wish to answer"];
+	var responses_f_4_7 = ["Yes", "No, only national governments", "Don't know/Do not wish to answer"];
+	var responses_f_4_8 = ["A global fund should be established that could pay for such damages", "We should help countries implement plans to reduce such damages", "We should create new institutional arrangements, such as an international climate court to settle damage claims", "Countries should take private insurance coverage", "Private insurance should play that role, and it should be left to anyone (individual, corporation, public body) to be insured or not", "We shouldn't change a thing", "Don't know/Do not wish to answer"];
+	
+	//Responses Session 5
+	var grades_f_5_1 = ["a", "b", "c"];
+	var grades_f_5_2 = ["a", "b", "c", "d"];
+	var grades_f_5_3 = ["a", "b", "c", "d"];
+	var grades_f_5_4 = ["a", "b", "c", "d"];
+	var grades_f_5_5 = ["a", "b", "c"];
+	
+	var responses_f_5_1 = ["Yes", "No", "Don't know/Do not wish to answer"];
+	var responses_f_5_2 = ["Yes, for individual countries", "Yes, but only for global combined efforts", "No", "Don't know/Do not wish to answer"];
+	var responses_f_5_3 = ["Any country should have a right to inspect others", "Yes, but only donor countries should be allowed to inspect receiving countries", "No, should be voluntary for all nations", "Don't know/Do not wish to answer"];
+	var responses_f_5_4 = ["Yes, and it should be legally binding for all countries", "Yes, but they should only be legally binding for developed nations", "No, it should be voluntary for each nation", "Don't know/Do not wish to answer"];
+	var responses_f_5_5 = ["Yes, all countries should report their emissions and report on the progress of their contribution", "Only developed countries should be obliged to report annually and publicly", "Don't know/Do not wish to answer"];
+	//
+	var labels = [];
+	var from;
+	
+	//If
+	if (valueSelected == "1.1"){
+		var grades = grades_f_1_1; 
+		var responses = responses_f_1_1;
+	}
+	else if  (valueSelected == "1.2"){
+		var grades = grades_f_1_2; 
+		var responses = responses_f_1_2;
+	}
+	else if  (valueSelected == "1.3"){
+		var grades = grades_f_1_3; 
+		var responses = responses_f_1_3;
+	}
+	else if  (valueSelected == "1.4"){
+		var grades = grades_f_1_4; 
+		var responses = responses_f_1_4;
+	}
+	else if  (valueSelected == "1.5"){
+		var grades = grades_f_1_5; 
+		var responses = responses_f_1_5;
+	}
+	else if  (valueSelected == "1.6"){
+		var grades = grades_f_1_6; 
+		var responses = responses_f_1_6;
+	}
+
+	else if  (valueSelected == "2.1"){
+		var grades = grades_f_2_1; 
+		var responses = responses_f_2_1;
+	}
+	else if  (valueSelected == "2.2"){
+		var grades = grades_f_2_2; 
+		var responses = responses_f_2_2;
+	}
+	else if  (valueSelected == "2.3"){
+		var grades = grades_f_2_3; 
+		var responses = responses_f_2_3;
+	}
+	else if  (valueSelected == "2.4"){
+		var grades = grades_f_2_4; 
+		var responses = responses_f_2_4;
+	}
+	else if  (valueSelected == "2.5"){
+		var grades = grades_f_2_5; 
+		var responses = responses_f_2_5;
+	}
+
+	else if  (valueSelected == "3.1"){
+		var grades = grades_f_3_1; 
+		var responses = responses_f_3_1;
+	}
+	else if  (valueSelected == "3.2"){
+		var grades = grades_f_3_2; 
+		var responses = responses_f_3_2;
+	}
+	else if  (valueSelected == "3.3"){
+		var grades = grades_f_3_3; 
+		var responses = responses_f_3_3;
+	}
+	else if  (valueSelected == "3.4"){
+		var grades = grades_f_3_4; 
+		var responses = responses_f_3_4;
+	}
+	else if  (valueSelected == "3.5"){
+		var grades = grades_f_3_5; 
+		var responses = responses_f_3_5;
+	}
+	else if  (valueSelected == "4.1"){
+		var grades = grades_f_4_1; 
+		var responses = responses_f_4_1;
+	}
+	else if  (valueSelected == "4.2"){
+		var grades = grades_f_4_2; 
+		var responses = responses_f_4_2;
+	}
+	else if  (valueSelected == "4.3"){
+		var grades = grades_f_4_3; 
+		var responses = responses_f_4_3;
+	}
+	else if  (valueSelected == "4.4"){
+		var grades = grades_f_4_4; 
+		var responses = responses_f_4_4;
+	}
+	else if  (valueSelected == "4.5"){
+		var grades = grades_f_4_5; 
+		var responses = responses_f_4_5;
+	}
+	else if  (valueSelected == "4.6"){
+		var grades = grades_f_4_6; 
+		var responses = responses_f_4_6;
+	}
+	else if  (valueSelected == "4.7"){
+		var grades = grades_f_4_7; 
+		var responses = responses_f_4_7;
+	}
+	else if  (valueSelected == "4.8"){
+		var grades = grades_f_4_8; 
+		var responses = responses_f_4_8;
+	}
+	
+	else if  (valueSelected == "5.1"){
+		var grades = grades_f_5_1; 
+		var responses = responses_f_5_1;
+	}
+	else if  (valueSelected == "5.2"){
+		var grades = grades_f_5_2; 
+		var responses = responses_f_5_2;
+	}
+	else if  (valueSelected == "5.3"){
+		var grades = grades_f_5_3; 
+		var responses = responses_f_5_3;
+	}
+	else if  (valueSelected == "5.4"){
+		var grades = grades_f_5_4; 
+		var responses = responses_f_5_4;
+	}
+	else if  (valueSelected == "5.5"){
+		var grades = grades_f_5_5; 
+		var responses = responses_f_5_5;
+	}
+	
+	//Loop
+	for (var i = 0; i < grades.length; i++) {
+		from = grades[i];
+
+		labels.push(
+			'<i style="background:' + getColor(from) + '"></i>' + responses[i] + "<br>");
+								
+	}
+	
+	//$( "#legend_content" ).append( $( ".legend" ) );
+	document.getElementById("legend_content").innerHTML = "<h2>Map Legend</h2>" + labels.join('<br>');
+	
+	}
+	</script>
+  </head>
+  
+<body onload='get_legend_items();'>
+
+<style type="text/css">
+	body {
+		padding: 0;
+		margin: 0;
+		overflow: hidden;
+		font-family: Trebuchet MS, Trebuchet, Arial, sans-serif;
+	}
+	
+	#banner {
+		background: #304099;
+		top: 0px;
+		left: 0px;
+		height: 60px;
+		width:100%;
+		text-align: center;
+	}
+     
+	#map-nav{
+		top: 0px;
+		position:absolute;
+		height: 100%;
+		width: 100%;
+	}
+	
+	#map-wrapper{
+		top: 0px;
+		float:right;
+		height: 100%;
+		width: 70%;
+		z-index: 2;
+	}
+	
+	#map-canvas {
+		top:0;
+		right: 0;
+        height: 100%;
+        width: 100%; 
+	}
+	
+	#nav{
+
+		width: 30%;
+		height: 100%;
+		float: right;
+		background: #fff;
+		color: #383838;
+		z-index: 1;
+		overflow-y: auto;
+		overflow-x: hidden;
+		
+	}
+	
+	#content{
+		padding: 15px;
+		font-size: 16px;		
+	}
+	
+	#content h1{
+		font-size: 20px;
+		text-align: center;
+		color: #1f6bea;
+	}
+	
+	#content h2{
+		font-size: 18px;
+		text-align: center;
+		color: #1f6bea;
+	}
+	
+	#content h3{
+		font-size: 18px;
+		color: #1f6bea;
+	}
+	
+	#content h4{
+		font-size: 9px;
+		text-align: right;
+	}
+	
+	#content h4 a{
+		color: #304099;
+		text-decoration: none;
+	}
+	
+	
+	#content hr{
+		border: 0;
+		height: 0;
+		border-top: 1px solid rgba(0, 0, 0, 0.1);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+	}
+	
+	#footnote a{
+		color: #304099;
+		text-decoration: none;
+	}
+	
+	#footer {
+		bottom: 0px;
+		left: 0px;
+		background-color: #E0E0E0;
+		color: #383838;
+		position: absolute;
+		height: 12px;
+		width: 100%;
+		z-index: 9;
+		font-size: 10px;
+		text-align: center;
+	}
+	
+	#footer a{
+		color: #304099;
+		text-decoration: none;
+	}
+	
+	/* The CSS */
+	select {
+		padding:8px;
+		margin: 0;
+		-webkit-border-radius:0px;
+		-moz-border-radius:0px;
+		border-radius:0px;
+		-webkit-box-shadow: 0 3px 0 #000000, 0 -1px #fff inset;
+		-moz-box-shadow: 0 3px 0 #000000, 0 -1px #fff inset;
+		box-shadow: 0 3px 0 #000000, 0 -1px #fff inset;
+		background: #f8f8f8;
+		color:#000;
+		border:none;
+		outline:none;
+		display: inline-block;
+		appearance:none;
+		cursor:pointer;
+		width: 100%;
+		font-family: Trebuchet MS, Trebuchet, Arial, sans-serif;
+		font-size: 16px;
+	}
+
+	/* Targetting Webkit browsers only. FF will show the dropdown arrow with so much padding. */
+	@media screen and (-webkit-min-device-pixel-ratio:0) {
+		select {padding-right:18px}
+	}
+
+	label {position:relative;}
+	label:after {
+		content:'<>';
+		color:#aaa;
+		-webkit-transform:rotate(90deg);
+		-moz-transform:rotate(90deg);
+		-ms-transform:rotate(90deg);
+		transform:rotate(90deg);
+		right:8px; top:2px;
+		padding:0 0 2px;
+		border-bottom:1px solid #ddd;
+		position:absolute;
+		pointer-events:none;
+
+	}
+	
+	label:before {
+		content:'';
+		right:6px; top:0px;
+		width:20px; height:20px;
+		background:#f8f8f8;
+		position:absolute;
+		pointer-events:none;
+		display:block;	
+	}
+
+	.info {
+		padding: 6px 8px;
+		font: 14px/16px Arial, Helvetica, sans-serif;
+		background: white;
+		background: rgba(255,255,255,0.8);
+		box-shadow: 0 0 15px rgba(0,0,0,0.2);
+		border-radius: 5px;
+		max-width: 50%;
+		color: #304099;
+		font-weight: bold;
+	
+	}
+	
+	.info h4 {
+		margin: 0 0 5px;
+		color: #484848;
+		font-size: 20px;
+		line-height: 20px;
+	}
+	
+	.info b{
+		font-size: 16px;
+		color: #000000;
+	}
+
+	#legend_content {
+		text-align: left;
+		line-height: 18px;
+		color: #555;
+		width: 90%;
+	}
+	
+	#legend_content i {
+		width: 18px;
+		height: 18px;
+		float: left;
+		margin-right: 8px;
+		opacity: 0.9;
+	}
+		
+	
+    </style>
+	
+	<!--<script type="text/javascript" src="tile.stamen.js?v1.3.0"></script>-->
+
+	<script type="text/javascript" src="src/countries_sel.js"></script>
+	
+<!--<div id="banner"><a href="http://climateandenergy.wwviews.org/results/" target="_blank"><img src='img/banner.png' height='60px'></a></div>-->
+
+	<div id="map-nav">
+	<div id="map-wrapper"><div id="map-canvas"></div></div>
+
+	<script type="text/javascript">
+
+		var map = L.map('map-canvas').setView([37.8, 0], 2);
+
+
+		L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png', {
+			maxZoom: 18,
+			attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://carto.com/attribution">CARTO</a>',
+		}).addTo(map);
+
+		//Original basemap
+		//L.tileLayer('https://{s}.tiles.mapbox.com/v3/{id}/{z}/{x}/{y}.png',  {
+			//maxZoom: 18,
+			//attribution: '<p style="font-size: 12px; display: inline; font-weight: bold;">Map created by <a style="color: #304099;" href="https://twitter.com/Andrea_Minano" target="_blank">Andrea Minano</a> in collaboration with the <a style="color: #304099;" href="https://uwaterloo.ca/">University of Waterloo</a> & <a style="color: #304099;" href="https://www.balsillieschool.ca/">Balsillie School of International Affairs</a></p>, ' +
+				//'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+				//'<a href="http://climateandenergy.wwviews.org/results/">World Wide Views</a>, '+
+				//'<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+				//'Imagery © <a href="http://mapbox.com">Mapbox</a>',
+			//id: 'examples.map-20v6611k'
+		//}).addTo(map);
+
+		var stripes_a_b = new L.StripePattern({
+            patternContentUnits: 'objectBoundingBox',
+            patternUnits: 'objectBoundingBox',
+            weight: 0.1,
+            spaceWeight: 0.1,
+			spaceColor:'#20457C',
+			spaceOpacity: 0.9,
+            height: 0.2,
+            angle: 45,
+			color:'#FB6648'
+			
+        });
+        
+		stripes_a_b.addTo(map);
+		
+		var stripes_b_c = new L.StripePattern({
+            patternContentUnits: 'objectBoundingBox',
+            patternUnits: 'objectBoundingBox',
+            weight: 0.1,
+            spaceWeight: 0.1,
+			spaceColor:'#33CC99',
+			spaceOpacity: 0.9,
+            height: 0.2,
+            angle: 45,
+			color:'#20457C' 
+			
+        });
+        
+		stripes_b_c.addTo(map);
+		
+		var stripes_c_d = new L.StripePattern({
+            patternContentUnits: 'objectBoundingBox',
+            patternUnits: 'objectBoundingBox',
+            weight: 0.1,
+            spaceWeight: 0.1,
+			spaceColor: '#990000',
+			spaceOpacity: 0.9,
+            height: 0.2,
+            angle: 45,
+			color:'#33CC99'
+			
+        });
+        
+		stripes_c_d.addTo(map);
+		
+		var stripes_a_d = new L.StripePattern({
+            patternContentUnits: 'objectBoundingBox',
+            patternUnits: 'objectBoundingBox',
+            weight: 0.1,
+            spaceWeight: 0.1,
+			spaceColor: '#990000',
+			spaceOpacity: 0.9,
+            height: 0.2,
+            angle: 45,
+			color:'#FB6648'
+			
+        });
+        
+		stripes_a_d.addTo(map);
+
+		var stripes_a_c = new L.StripePattern({
+            patternContentUnits: 'objectBoundingBox',
+            patternUnits: 'objectBoundingBox',
+            weight: 0.1,
+            spaceWeight: 0.1,
+			spaceColor: '#33CC99',
+			spaceOpacity: 0.9,
+            height: 0.2,
+            angle: 45,
+			color:'#FB6648'
+			
+        });
+        
+		stripes_a_c.addTo(map);
+		
+		// control that shows state info on hover
+		info = L.control();
+
+		info.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info');
+			this.update();
+			return this._div;
+		};
+
+		info.update = function (props) {
+			var question = get_question(valueSelected);
+			if (valueSelected == "1.1"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_1_1) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "1.2"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_1_2) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "1.3"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_1_3) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "1.4"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_1_4) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "1.5"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_1_5) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "1.6"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_1_6) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "2.1"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_2_1) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "2.2"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_2_2) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "2.3"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_2_3) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "2.4"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_2_4) 
+				: '<br><i>Hover over a country or region</i>');
+			}	
+			else if (valueSelected == "2.5"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_2_5) 
+				: '<br><i>Hover over a country or region</i>');
+			}				
+			else if (valueSelected == "3.1"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_3_1) 
+				: '<br><i>Hover over a country or region</i>');
+			}		
+			else if (valueSelected == "3.2"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_3_2) 
+				: '<br><i>Hover over a country or region</i>');
+			}		
+			else if (valueSelected == "3.3"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_3_3) 
+				: '<br><i>Hover over a country or region</i>');
+			}			
+			else if (valueSelected == "3.4"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_3_4) 
+				: '<br><i>Hover over a country or region</i>');
+			}		
+			else if (valueSelected == "3.5"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_3_5) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "4.1"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_4_1) 
+				: '<br><i>Hover over a country or region</i>');
+			}	
+			else if (valueSelected == "4.2"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_4_2) 
+				: '<br><i>Hover over a country or region</i>');
+			}			
+			else if (valueSelected == "4.3"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_4_3) 
+				: '<br><i>Hover over a country or region</i>');
+			}				
+			else if (valueSelected == "4.4"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_4_4) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			
+			else if (valueSelected == "4.5"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_4_5) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "4.6"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' + (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_4_6) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "4.7"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_4_7) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "4.8"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_4_8) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			
+			else if (valueSelected == "5.1"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_5_1) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "5.2"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_5_2) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "5.3"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +   (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_5_3) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "5.4"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_5_4) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+			else if (valueSelected == "5.5"){
+			this._div.innerHTML = '<h4>' + question + '</h4>' +  (props ?
+				'<br><b>'+ props.name + '</b><br />' + get_answer(valueSelected, props.F_5_5) 
+				: '<br><i>Hover over a country or region</i>');
+			}
+		};
+		
+
+		info.addTo(map);
+
+
+		// get color depending on population density value
+		function getColor(d) {
+			return d == "a" ? '#FB6648' :
+			       d == "b"  ? '#20457C' :
+			       d == "c"  ? '#33CC99' :
+			       d == "d"  ? '#990000' :
+			       d == "e"   ? '#3f007f' :
+			       d == "f"   ? '#F2AE72' :
+			       d == "g"   ? '#66CC66' :
+				   d == "h"   ? '#CC6633' :
+			                  '#C8C8C8';
+		}
+
+		function style(feature) {
+		
+		if (valueSelected == "1.1"){
+			if (feature.properties.F_1_1.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (feature.properties.F_1_1.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (feature.properties.F_1_1.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (feature.properties.F_1_1.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (feature.properties.F_1_1.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_c
+				};
+			}
+			
+			else{
+			return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_1_1)
+			};
+			}
+		}
+		else if (valueSelected == "1.2"){
+		
+			if (feature.properties.F_1_2.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (feature.properties.F_1_2.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (feature.properties.F_1_2.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (feature.properties.F_1_2.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (feature.properties.F_1_2.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_1_2)
+			};
+			}
+		}
+		else if (valueSelected == "1.3"){
+		
+			var test = feature.properties.F_1_3;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_1_3)
+			};
+			}
+		}
+		else if (valueSelected == "1.4"){
+		
+			var test = feature.properties.F_1_4;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_1_4)
+			};
+			}
+		}
+		else if (valueSelected == "1.5"){
+		
+		var test = feature.properties.F_1_5;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_1_5)
+			};
+			}
+		}
+		else if (valueSelected == "1.6"){
+		var test = feature.properties.F_1_6;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_1_6)
+			};
+			}
+		}
+		else if (valueSelected == "2.1"){
+		var test = feature.properties.F_2_1;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+		
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_2_1)
+			};
+			}
+		}
+		else if (valueSelected == "2.2"){
+		
+			var test = feature.properties.F_2_2;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_2_2)
+			};
+			}
+		}
+		else if (valueSelected == "2.3"){
+			var test = feature.properties.F_2_3;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_2_3)
+			};
+			}
+		}
+		else if (valueSelected == "2.4"){
+		var test = feature.properties.F_2_4;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_2_4)
+			};
+			}
+		}
+		else if (valueSelected == "2.5"){
+		
+		var test = feature.properties.F_2_5;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_2_5)
+			};
+			}
+		}
+		else if (valueSelected == "3.1"){
+		var test = feature.properties.F_3_1;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_3_1)
+			};
+			}
+		}
+		else if (valueSelected == "3.2"){
+		var test = feature.properties.F_3_2;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_3_2)
+			};
+			}
+		}
+		else if (valueSelected == "3.3"){
+		var test = feature.properties.F_3_3;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_3_3)
+			};
+			}
+		}
+		else if (valueSelected == "3.4"){
+		var test = feature.properties.F_3_4;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_3_4)
+			};
+			}
+		}
+		else if (valueSelected == "3.5"){
+		var test = feature.properties.F_3_5;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_3_5)
+			};
+			}
+		}
+		else if (valueSelected == "4.1"){
+		var test = feature.properties.F_4_1;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_4_1)
+			};
+			}
+		}
+		else if (valueSelected == "4.2"){
+		var test = feature.properties.F_4_2;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_4_2)
+			};
+			}
+		}
+		else if (valueSelected == "4.3"){
+		var test = feature.properties.F_4_3;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_4_3)
+			};
+			}
+		}
+		else if (valueSelected == "4.4"){
+		var test = feature.properties.F_4_4;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_4_4)
+			};
+			}
+		}
+		else if (valueSelected == "4.5"){
+		var test = feature.properties.F_4_5;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_4_5)
+			};
+			}
+		}
+		else if (valueSelected == "4.6"){
+		var test = feature.properties.F_4_6;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_4_6)
+			};
+			}
+		}
+		else if (valueSelected == "4.7"){
+		var test = feature.properties.F_4_7;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_4_7)
+			};
+			}
+		}
+		else if (valueSelected == "4.8"){
+		var test = feature.properties.F_4_8;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_4_8)
+			};
+			}
+		}
+		else if (valueSelected == "5.1"){
+		var test = feature.properties.F_5_1;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_5_1)
+			};
+			}
+		}
+		else if (valueSelected == "5.2"){
+		var test = feature.properties.F_5_2;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_5_2)
+			};
+			}
+		}
+		else if (valueSelected == "5.3"){
+		var test = feature.properties.F_5_3;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_5_3)
+			};
+			}
+		}
+		else if (valueSelected == "5.4"){
+		var test = feature.properties.F_5_4;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_5_4)
+			};
+			}
+		}
+		else if (valueSelected == "5.5"){
+		var test = feature.properties.F_5_5;
+			if (test.indexOf('a & b') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_b
+				};
+			}
+			
+			else if (test.indexOf('b & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_b_c
+				};
+			}
+			
+			else if (test.indexOf('c & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_c_d
+				};
+			}
+			
+			else if (test.indexOf('a & d') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_d
+				};
+			}
+			
+			else if (test.indexOf('a & c') > -1){
+			return{
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillPattern: stripes_a_c
+				};
+			}
+			else {
+				return {
+				weight: 2,
+				opacity: 1,
+				color: 'white',
+				dashArray: '3',
+				fillOpacity: 0.9,
+				fillPattern: null,
+				fillColor: getColor(feature.properties.F_5_5)
+			};
+			}
+		}
+		}
+		
+		function highlightFeature(e) {
+			var layer = e.target;
+
+			layer.setStyle({
+				weight: 5,
+				color: '#666',
+				dashArray: '',
+				fillOpacity: 0.7
+			});
+
+			if (!L.Browser.ie && !L.Browser.opera) {
+				layer.bringToFront();
+			}
+
+			info.update(layer.feature.properties);
+		}
+
+		function resetHighlight(e) {
+			geojson.resetStyle(e.target);
+			info.update();
+		}
+
+		function zoomToFeature(e) {
+			map.fitBounds(e.target.getBounds());
+		}
+
+		function onEachFeature(feature, layer) {
+			layer.on({
+				mouseover: highlightFeature,
+				mouseout: resetHighlight,
+				click: zoomToFeature
+			});
+		}
+
+		geojson = L.geoJson(countriesData, {
+			style: style,
+			onEachFeature: onEachFeature
+		}).addTo(map);
+		
+		function get_question(q){
+			if (q == '1.1'){
+			return "How concerned are you about the impacts of climate change?";
+			}
+			else if (q == '1.2'){
+			return "For you, measures to fight climate change:"
+			}
+			else if (q == '1.3'){
+			return "What do you think should be the focus of global efforts in the coming decades?"
+			}
+			else if (q == '1.4'){
+			return "In your opinion, have the outcomes of the UN climate negotiations since 1992 done enough to tackle climate change?"
+			}
+			else if (q == '1.5'){
+			return "How urgently should the world react to tackle climate change?"
+			}
+			else if (q == '1.6'){
+			return "In your opinion, who should primarily be responsible for tackling climate change?"
+			}
+			else if (q == '2.1'){
+			return "Would you support a carbon tax?"
+			}
+			else if (q == '2.2'){
+			return "Which of the following approaches do you prefer for making large-scale cuts in greenhouse gas emissions?"
+			}
+			else if (q == '2.3'){
+			return "In order to deal with climate change what do you think will be most effective?"
+			}
+			else if (q == '2.4'){
+			return "Which of the following instruments do you find relevant in relation to reducing the level of greenhouse gas emission"
+			}
+			else if (q == '2.5'){
+			return "How should the world deal with the exploration for new fossil fuel reserves?"
+			}
+			else if (q == '3.1'){
+			return "To what extend did you feel familiar with the process of making an international climate agreement, before joining World Wide Views?"
+			}
+			else if (q == '3.2'){
+			return "How familiar do you feel now?"
+			}
+			else if (q == '3.3'){
+			return "How do you feel that your country is dealing with climate change?"
+			}
+			else if (q == '3.4'){
+			return "Should your country take measure to reduce its greenhouse gas emissions?"
+			}
+			else if (q == '3.5'){
+			return "Should a Paris agreement include a global long-term goal for zero emissions at the end of this century?"
+			}
+			else if (q == '4.1'){
+			return "What would be the best basis for setting the ambition of national climate contributions?"
+			}
+			else if (q == '4.2'){
+			return "After 2020, should high-income countries pay more than already agreed on for mitigation and adaptation in low-income countries ($100 billion in 2020)?"
+			}
+			else if (q == '4.3'){
+			return "Should private sector contributions count as part of the offers to climate finance from developing countries?"
+			}
+			else if (q == '4.4'){
+			return "Should all developing countries be treated as one group, as presently, or should richer developing countries have to do more?"
+			}
+			else if (q == '4.5'){
+			return "Should only high-income countries contribute to the Green Climate Fund?"
+			}
+			else if (q == '4.6'){
+			return "Should the efforts of developing countries depend on funding from developed countries?"
+			}
+			else if (q == '4.7'){
+			return "Should local authorities, including cities, have access to funding from the Green Climate Fund?"
+			}
+			else if (q == '4.8'){
+			return "Which of the following options should a Paris agreement include to address loss and damage associated with the impacts of climate change?"
+			}
+			
+			else if (q == '5.1'){
+			return "Do you agree that countries should agree in Paris to update their climate action commitments every 5 years?"
+			}
+			else if (q == '5.2'){
+			return "Should a UN level body have the authority to make reviews that assess the sufficiency and fairness of countries climate action?"
+			}
+			else if (q == '5.3'){
+			return "Do you think that countries should have the right to inspect each other's reporting of mitigation and adaptation efforts?"
+			}
+			else if (q == '5.4'){
+			return "Should a Paris agreement include national short-term goals?"
+			}
+			else if (q == '5.5'){
+			return "Should countries publish an annual report on their emissions, and report on progress towards meeting their pledge for climate action?"
+			}	
+			
+		}
+		
+		function get_answer(q, a){
+		//Answers Session 1, Q1
+		if (q == "1.1" && a == "a"){
+		return "Very concerned";
+		}
+		else if (q == "1.1" && a == "b"){
+		return "Moderately concerned";
+		}
+		else if (q == "1.1" && a == "c"){
+		return "Not concerned";
+		}
+		else if (q == "1.1" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		else if (q == "1.1" && a == "a & b"){
+		return "Very concerned / " + 
+		"Moderately concerned";
+		}
+		//Answers Session 1, Q2
+		else if (q == "1.2" && a == "a"){
+		return "Are mostly a threat to our quality of life";
+		}
+		else if (q == "1.2" && a == "b"){
+		return "Are mostly an opportunity to improve our quality of life";
+		}
+		else if (q == "1.2" && a == "c"){
+		return "Will not impact our quality of life";
+		}
+		else if (q == "1.2" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 1, Q3
+		else if (q == "1.3" && a == "a"){
+		return "The focus should primarily be on adaptation";
+		}
+		else if (q == "1.3" && a == "b"){
+		return "The focus should primarily be on mitigation";
+		}
+		else if (q == "1.3" && a == "c"){
+		return "The focus should equally be on adaptation and mitigation";
+		}
+		else if (q == "1.3" && a == "d"){
+		return "Focus should be neither on adaptation nor mitigation";
+		}
+		else if (q == "1.3" && a == "e"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 1, Q4
+		else if (q == "1.4" && a == "a"){
+		return "Yes";
+		}
+		else if (q == "1.4" && a == "b"){
+		return "No";
+		}
+		else if (q == "1.4" && a == "c"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 1, Q5
+		else if (q == "1.5" && a == "a"){
+		return "The world should decide in Paris to do whatever it takes to limit temperatures exceeding 2 degrees Celsius warming";
+		}
+		else if (q == "1.5" && a == "b"){
+		return "The world should take ambitious action, but not whatever it takes";
+		}
+		else if (q == "1.5" && a == "c"){
+		return "The world should opt for a goal that will not substantially change the present scheme of things";
+		}
+		else if (q == "1.5" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 1, Q6
+		else if (q == "1.6" && a == "a"){
+		return "It is primarily a global responsibility (Through an international climate agreement or treaty)";
+		}
+		else if (q == "1.6" && a == "b"){
+		return "It is primarily the responsibility of citizens and civil society initiatives";
+		}
+		else if (q == "1.6" && a == "c"){
+		return "It is primariy the responsibility of national governments";
+		}
+		else if (q == "1.6" && a == "d"){
+		return "It is primarily the responsibility of local authorities";
+		}
+		else if (q == "1.6" && a == "e"){
+		return "It is primarily the responsibility of businesses and the private sector";
+		}
+		else if (q == "1.6" && a == "f"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 2, Q1
+		else if (q == "2.1" && a == "a"){
+		return "Yes, for all countries";
+		}
+		else if (q == "2.1" && a == "b"){
+		return "Yes, for all countries but gradually increasing costs in countries that do not reduce their emissions";
+		}
+		else if (q == "2.1" && a == "c"){
+		return "Yes, graduated according to the level of development";
+		}
+		else if (q == "2.1" && a == "d"){
+		return "No I would not support such a tax";
+		}
+		else if (q == "2.1" && a == "e"){
+		return "Don't know/Do not wish to answer";
+		}
+		else if (q == "2.1" && a == "b & c"){
+		return "Yes, for all countries but gradually increasing costs in countries that do not reduce their emissions / " +
+		"Yes, graduated according to the level of development";
+		}
+		//Answers Session 2, Q2
+		else if (q == "2.2" && a == "a"){
+		return "Support for research and development of low carbon technology, for example research into effective car batteries";
+		}
+		else if (q == "2.2" && a == "b"){
+		return "Carbon pricing, for example through taxes on carbon emissions, or emissions trading schemes";
+		}
+		else if (q == "2.2" && a == "c"){
+		return "Cutting fossil fuel subsidies";
+		}
+		else if (q == "2.2" && a == "d"){
+		return "Subsidisation for low-carbon energy, such as wind, solar power, marine energies, geothermal energy";
+		}
+		else if (q == "2.2" && a == "e"){
+		return "Legislation of new standards, for example to improve the energy efficiency of cars or buildings and appliances";
+		}
+		else if (q == "2.2" && a == "f"){
+		return "New socio-economic institutions and practices, such as investment in public transporation systems or consumption of locally produced food";
+		}
+		else if (q == "2.2" && a == "g"){
+		return "Don't know/Do not wish to answer";
+		}
+		else if (q == "2.2" && a == "a & d"){
+		return "Support for research and development of low carbon technology, for example research into effective car batteries / " +
+		"Subsidisation for low-carbon energy, such as wind, solar power, marine energies, geothermal energy";
+		}
+		//Answers Session 2, Q3
+		else if (q == "2.3" && a == "a"){
+		return "Solutions implemented globally";
+		}
+		else if (q == "2.3" && a == "b"){
+		return "Solutions implemented at the national level";
+		}
+		else if (q == "2.3" && a == "c"){
+		return "Solutions implemented at local/subnational level";
+		}
+		else if (q == "2.3" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 2, Q4
+		else if (q == "2.4" && a == "a"){
+		return "Education programs on climate change for the broader public";
+		}
+		else if (q == "2.4" && a == "b"){
+		return "Use of solutions developed by traditional and indigenous knowledge";
+		}
+		else if (q == "2.4" && a == "c"){
+		return "Initiatives for fostering more gender equality";
+		}
+		else if (q == "2.4" && a == "d"){
+		return "Other UN initiatives, conventions and programs";
+		}
+		else if (q == "2.4" && a == "e"){
+		return "Protection of tropical forests";
+		}
+		else if (q == "2.4" && a == "f"){
+		return "None of these instruments are relevant";
+		}
+		else if (q == "2.4" && a == "g"){
+		return "Don't know/Do not wish to answer";
+		}		
+		//Answers Session 2, Q5
+		else if (q == "2.5" && a == "a"){
+		return "Stop exploration for fossil fuel reserves";
+		}
+		else if (q == "2.5" && a == "b"){
+		return "Stop only the exploration for coal";
+		}
+		else if (q == "2.5" && a == "c"){
+		return "The world should continue to explore";
+		}
+		else if (q == "2.5" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 3, Q1
+		else if (q == "3.1" && a == "a"){
+		return "I knew almost nothing";
+		}
+		else if (q == "3.1" && a == "b"){
+		return "I knew very little";
+		}
+		else if (q == "3.1" && a == "c"){
+		return "I knew some";
+		}
+		else if (q == "3.1" && a == "d"){
+		return "I knew a lot";
+		}
+		else if (q == "3.1" && a == "e"){
+		return "I was already an expert on the subject";
+		}
+		else if (q == "3.1" && a == "f"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 3, Q2
+		else if (q == "3.2" && a == "a"){
+		return "I know almost nothing";
+		}
+		else if (q == "3.2" && a == "b"){
+		return "I know very little";
+		}
+		else if (q == "3.2" && a == "c"){
+		return "I know some";
+		}
+		else if (q == "3.2" && a == "d"){
+		return "I know a lot";
+		}
+		else if (q == "3.2" && a == "e"){
+		return "I am an expert on the subject";
+		}
+		else if (q == "3.2" && a == "f"){
+		return "Don't know/Do not wish to answer";
+		}
+		else if (q == "3.2" && a == "c & d"){
+		return "I know some / " +
+		"I know a lot";	
+		}
+		//Answers Session 3, Q3
+		else if (q == "3.3" && a == "a"){
+		return "Climate change is a national priority and it should be";
+		}
+		else if (q == "3.3" && a == "b"){
+		return "Climate change is a national priority and it should not be";
+		}
+		else if (q == "3.3" && a == "c"){
+		return "Climate change is not a national priority but it should be";
+		}
+		else if (q == "3.3" && a == "d"){
+		return "Climate change is not a national priority and it should not be";
+		}
+		else if (q == "3.3" && a == "e"){
+		return "Don't know/Do not wish to answer";
+		}	
+		else if (q == "3.3" && a == "a & c"){
+		return "Climate change is a national priority and it should be / " + 
+		"Climate change is not a national priority but it should be";
+		}
+		//Answers Session 3, Q4
+		else if (q == "3.4" && a == "a"){
+		return "Yes, even if many other countries do not take measures";
+		}
+		else if (q == "3.4" && a == "b"){
+		return "Yes, but only if many other countries take measures";
+		}
+		else if (q == "3.4" && a == "c"){
+		return "No, we should not intervene in this matter";
+		}
+		else if (q == "3.4" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 3, Q5
+		else if (q == "3.5" && a == "a"){
+		return "Yes, and it should be legally binding for all countries";
+		}
+		else if (q == "3.5" && a == "b"){
+		return "Yes, but it should only be legally binding for developed and emerging nations";
+		}
+		else if (q == "3.5" && a == "c"){
+		return "Yes, but it should be voluntary for all nations";
+		}
+		else if (q == "3.5" && a == "d"){
+		return "No";
+		}
+		else if (q == "3.5" && a == "e"){
+		return "Don't know/Do not wish to answer";
+		}	
+		//Answers Session 4, Q1
+		else if (q == "4.1" && a == "a"){
+		return "Historical emissions";
+		}
+		else if (q == "4.1" && a == "b"){
+		return "Current or anticipated emissions";
+		}
+		else if (q == "4.1" && a == "c"){
+		return "Current or future economic capabilities";
+		}
+		else if (q == "4.1" && a == "d"){
+		return "Countries should not have to make national contributions";
+		}
+		else if (q == "4.1" && a == "e"){
+		return "Don't know/Do not wish to answer";
+		}
+		else if (q == "4.1" && a == "a & b"){
+		return "Historical emissions / " +
+		"Current or anticipated emissions";
+		}
+		//Answers Session 4, Q2
+		else if (q == "4.2" && a == "a"){
+		return "Yes";
+		}
+		else if (q == "4.2" && a == "b"){
+		return "No";
+		}
+		else if (q == "4.2" && a == "c"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 4, Q3
+		else if (q == "4.3" && a == "a"){
+		return "Yes, about half or more";
+		}
+		else if (q == "4.3" && a == "b"){
+		return "Yes, but only a small part";
+		}
+		else if (q == "4.3" && a == "c"){
+		return "No";
+		}
+		else if (q == "4.3" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 4, Q4
+		else if (q == "4.4" && a == "a"){
+		return "All developing countries should be treated the same way";
+		}
+		else if (q == "4.4" && a == "b"){
+		return "Richer developing countries should have the same responsibilities as developed nations";
+		}
+		else if (q == "4.4" && a == "c"){
+		return "Richer developing countries should be treated as a third group, with bigger responsibilities than the poorest, least developed countries, but smaller responsibilities than developed nations";
+		}
+		else if (q == "4.4" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 4, Q5
+		else if (q == "4.5" && a == "a"){
+		return "Yes";
+		}
+		else if (q == "4.5" && a == "b"){
+		return "No, richer developing countries should also contribute";
+		}
+		else if (q == "4.5" && a == "c"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 4, Q6
+		else if (q == "4.6" && a == "a"){
+		return "Yes, completely";
+		}
+		else if (q == "4.6" && a == "b"){
+		return "Yes, partly";
+		}
+		else if (q == "4.6" && a == "c"){
+		return "No";
+		}
+		else if (q == "4.6" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 4, Q7
+		else if (q == "4.7" && a == "a"){
+		return "Yes";
+		}
+		else if (q == "4.7" && a == "b"){
+		return "No, only national governments";
+		}
+		else if (q == "4.7" && a == "c"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 4, Q8
+		else if (q == "4.8" && a == "a"){
+		return "A global fund should be established that could pay for such changes";
+		}
+		else if (q == "4.8" && a == "b"){
+		return "We should help countries implement plans to reduce such damages";
+		}
+		else if (q == "4.8" && a == "c"){
+		return "We should create new institutional agreements, such as an international climate court to settle damage claims";
+		}
+		else if (q == "4.8" && a == "d"){
+		return "Countries should take private insurance coverage";
+		}
+		else if (q == "4.8" && a == "e"){
+		return "Private insurance should play that role, and it should be left to anyone (individual, corporation, public body) to be insured or not";
+		}
+		else if (q == "4.8" && a == "f"){
+		return "We shouldn't change a thing";
+		}
+		else if (q == "4.8" && a == "g"){
+		return "Don't know/Do not wish to answer";
+		}
+		else if (q == "4.8" && a == "a & b"){
+		return "A global fund should be established that could pay for such changes / " + 
+		"We should help countries implement plans to reduce such damages";
+		}
+		//Answers Session 5, Q1
+		else if (q == "5.1" && a == "a"){
+		return "Yes";
+		}
+		else if (q == "5.1" && a == "b"){
+		return "No";
+		}
+		else if (q == "5.1" && a == "c"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 5, Q2
+		else if (q == "5.2" && a == "a"){
+		return "Yes, for individual countries";
+		}
+		else if (q == "5.2" && a == "b"){
+		return "Yes, but only for global combined efforts";
+		}
+		else if (q == "5.2" && a == "c"){
+		return "No";
+		}
+		else if (q == "5.2" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 5, Q3
+		else if (q == "5.3" && a == "a"){
+		return "Any country should have a right to inspect others";
+		}
+		else if (q == "5.3" && a == "b"){
+		return "Yes, but only donor countries should be allowed to inspect receiving countries";
+		}
+		else if (q == "5.3" && a == "c"){
+		return "No, should be voluntary for all nations";
+		}
+		else if (q == "5.3" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		else if (q == "5.3" && a == "a & b"){
+		return "Any country should have a right to inspect others / " +
+		"Yes, but only donor countries should be allowed to inspect receiving countries";
+		}
+		//Answers Session 5, Q4
+		else if (q == "5.4" && a == "a"){
+		return "Yes, and it should be legally binding for all countries";
+		}
+		else if (q == "5.4" && a == "b"){
+		return "Yes, but they should only be legally binding for developed nations";
+		}
+		else if (q == "5.4" && a == "c"){
+		return "No, it should be voluntary for each nation";
+		}
+		else if (q == "5.4" && a == "d"){
+		return "Don't know/Do not wish to answer";
+		}
+		//Answers Session 5, Q5
+		else if (q == "5.5" && a == "a"){
+		return "Yes, all countries should report their emissions and report on the progress of thei contribution";
+		}
+		else if (q == "5.5" && a == "b"){
+		return "Only developed countries should be obliged to report annually and publicly";
+		}
+		else if (q == "5.5" && a == "c"){
+		return "Don't know/Do not wish to answer";
+		}
+		else if (q == "5.5" && a == "a & b"){
+		return "Yes, all countries should report their emissions and report on the progress of thei contribution / " +
+		"Only developed countries should be obliged to report annually and publicly";
+		
+		}		
+		//Other
+		else if (a == "x"){
+		return "This country participated in the global citizen consultation but data not yet available online";
+		}
+		}
+
+	</script>
+	
+	
+<div id="nav">
+<div id="banner"><a href="http://climateandenergy.wwviews.org/results/" target="_blank"><img src='img/banner.png' height='60px'></a></div>
+
+<div id="content">
+	<b>On June 6th, 2015, 10 thousand citizens from 76 countries gathered to share their opinions on climate change and energy issues.</b> Browse this map to view how citizens responded to an identical set of questions related to climate and energy, including fossil fuel exploration and carbon emission reduction measures.<sup>1</sup>
+	<h1></h1>
+	<h3>Select a question that was answered by citizens around the globe:</h3>
+	<select>
+	<optgroup label="1. Importance of tackling climate change">
+	<option value="1.1">1.1 How concerned are you about the impacts of climate change?</option>
+	<option value="1.2">1.2 For you, measures to fight climate change:</option>
+	<option value="1.3">1.3 What do you think should be the focus of global efforts in the coming decades?</option>
+	<option value="1.4">1.4 In your opinion, have the outcomes of the UN climate negotiations since 1992 done enough to tackle climate change?</option>
+	<option value="1.5">1.5 How urgently should the world react to tackle climate change?</option>
+	<option value="1.6">1.6 In your opinion, who should primarily be responsible for tackling climate change?</option>
+	</optgroup>
+	<optgroup label="2. Tools to tackle climate change">
+	<option value="2.1">2.1 Would you support a carbon tax?</option>
+	<option value="2.2">2.2 Which of the following approaches do you prefer for making large-scale cuts in greenhouse gas emissions?</option>
+	<option value="2.3">2.3 In order to deal with climate change what do you think will be most effective?</option>
+	<option value="2.4">2.4 Which of the following instruments do you find relevant in relation to reducing the level of greenhouse gas emission</option>
+	<option value="2.5">2.5 How should the world deal with exploration for new fossil fuel reserves?</option>
+	</optgroup>
+	<optgroup label="3. UN negotiations and national commitments">
+	<option value="3.1">3.1 To what extent did you feel familiar with the process of making an international climate agreement, before joining World Wide Views?</option>
+	<option value="3.2">3.2 How familiar do you feel now?</option>
+	<option value="3.3">3.3 How do you feel that your country is dealing with climate change?</option>
+	<option value="3.4">3.4 Should your country take measure to reduce its greenhouse gas emissions?</option>
+	<option value="3.5">3.5 Should a Paris agreement include a global long-term goal for zero emissions at the end of this century?</option>
+	</optgroup>
+	<optgroup label="4. Fairness and distribution of efforts">
+	<option value="4.1">4.1 What would be the best basis for setting the ambition of national climate contributions?</option>
+	<option value="4.2">4.2 After 2020, should high-income countries pay more than already agreed on for mitigation and adaptation in low-income countries ($100 billion in 2020)?</option>
+	<option value="4.3">4.3 Should private sector contributions count as part of the offers to climate finance from developed countries?</option>
+	<option value="4.4">4.4 Should all developing countries be treated as one group, as presently, or should richer developing countries have to do more?</option>
+	<option value="4.5">4.5 Should only high-income countries contribute to the Green Climate Fund?</option>
+	<option value="4.6">4.6 Should the efforts of developing countries depend on funding from developed countries?</option>
+	<option value="4.7">4.7 Should local authorities, including cities, have access to funding from the Green Climate Fund?</option>
+	<option value="4.8">4.8 Which of the following options should a Paris agreement include to address loss and damage associated with the impacts of climate change?</option>
+	</optgroup>
+	<optgroup label="5. Making and keeping climate promises">
+	<option value="5.1">5.1 Do you agree that countries should agree in Paris to update their climate commitments every 5 years?</option>
+	<option value="5.2">5.2 Should a UN level body have the authority to make reviews that assess the sufficiency and fairness of countries climate action?</option>
+	<option value="5.3">5.3 Do you think that countries should have the right to inspect each other's reporting of mitigation and adaptation efforts?</option>
+	<option value="5.4">5.4 Should a Paris agreement include national short-term goals?</option>
+	<option value="5.5">5.5 Should countries publish an annual report on their emissions, and report on progress towards meeting their pledge for climate action?</option>
+	</optgroup>
+	</select>
+	<div id="legend_content"></div>
+	<hr>
+	<p id="footnote" style="font-size: 12px;"><sup>1</sup>These maps show how the majority of citizens from each participating country or region voted per question. The complete results can be found in the <a href="http://climateandenergy.wwviews.org/results/" target="_blank">World Wide Views website</a>.</p>
+	<a href="https://uwaterloo.ca/climate-centre/" style="text-decoration: none; color: #304099; font-weight: bold;"><!--<img src="img/back_button.png" width="14px" height="14px"> Back to IC<sup>3</sup></a>-->
+	</div></div>
+<!--<div id="footer">Created by <a href="http://minano.ca/" target="_blank">Andrea Minano</a> in collaboration with the <a href="https://uwaterloo.ca/" target="_blank">University of Waterloo</a> and <a href="https://www.balsillieschool.ca/">Balsillie School of International Affairs</a></div>-->
+</div>
+</body>
+</html>
